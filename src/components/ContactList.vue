@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { formatDateTime } from '../utils/xmlParser'
 
 const props = defineProps({
@@ -9,6 +9,8 @@ const props = defineProps({
     default: () => []
   }
 })
+
+const selectedContactId = ref(null)
 
 const emit = defineEmits(['select-contact'])
 
@@ -52,8 +54,13 @@ const contactGroups = computed(() => {
   <div class="divide-y divide-gray-200 dark:divide-gray-700">
     <div v-for="contact in contactGroups" 
          :key="contact.id"
-         @click="emit('select-contact', contact.id)"
-         class="flex items-center space-x-4 p-4 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+         @click="selectedContactId = contact.id; emit('select-contact', contact.id)"
+         :class="[
+           'flex items-center space-x-4 p-4 cursor-pointer transition-all duration-200 border-l-4',
+           selectedContactId === contact.id
+             ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-500 dark:border-blue-400'
+             : 'hover:bg-gray-50 dark:hover:bg-gray-700 border-transparent'
+         ]">
       <!-- 联系人头像 -->
       <div class="flex-shrink-0 w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center">
         <span class="text-lg font-medium text-gray-600 dark:text-gray-300">
