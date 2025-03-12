@@ -1,0 +1,114 @@
+<script setup>
+import { ref, watchEffect, computed } from 'vue'
+import MessageList from '../components/MessageList.vue'
+import ContactList from '../components/ContactList.vue'
+import SearchBar from '../components/SearchBar.vue'
+import { parseXMLFile } from '../utils/xmlParser'
+
+// 状态管理
+const messages = ref([])
+const isLoading = ref(false)
+const filteredMessages = ref([])
+const selectedContactId = ref(null)
+
+// 选中联系人的消息列表
+const selectedContactMessages = computed(() => {
+  if (!selectedContactId.value) return []
+  return filteredMessages.value.filter(msg => msg.address === selectedContactId.value)
+})
+
+// 处理联系人选择
+function handleContactSelect(contactId) {
+  selectedContactId.value = contactId
+}
+
+// 处理文件上传
+async function handleFileUpload(event) {
+  const files = Array.from(event.target.files)
+  if (!files.length) return
+
+  try {
+    isLoading.value = true
+    for (const file of files) {
+      // 检查文件名是否符合短信文件格式
+      if (!file.name.startsWith('sms-')) {
+        throw new Error(`文件 ${file.name} 不是有效的短信记录文件`)
+      }
+      const result = await parseXMLFile(file)
+      messages.value = [...messages.value, ...result.messages]
+    }
+  } catch (error) {
+    const event = new CustomEvent('show-error', {
+      detail: { message: error.message }
+    })
+    window.dispatchEvent(event)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// 处理搜索
+function handleSearch({ query, date }) {
+  if (!query && !date) {
+    filteredMessages.value = messages.value
+    return
+  }
+
+  filteredMessages.value = messages.value.filter(msg => {
+    const contentMatch = !query || 
+      msg.body.toLowerCase().includes(query.toLowerCase()) ||
+      msg.address.includes(query)
+    const dateMatch = !date || 
+      new Date(msg.date).toLocaleDateString() === new Date(date).toLocaleDateString()
+    return contentMatch && dateMatch
+  })
+}
+
+// 初始化filteredMessages
+watchEffect(() => {
+  filteredMessages.value = messages.value
+})
+</script>
+
+<template>
+  <div class="container mx-auto px-4 py-8">
+    <!-- 搜索栏和文件上传区域 -->
+    <div class="mb-6 flex flex-col md:flex-row gap-4 items-center">
+      <SearchBar @search="handleSearch" class="flex-grow" />
+      <div class="flex-shrink-0">
+        <label class="flex items-center px-4 py-2 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 transition-colors duration-200">
+          <svg class="w-6 h-6 mr-2 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+          </svg>
+          <span class="text-sm text-gray-500 dark:text-gray-400">上传短信文件</span>
+          <input type="file" class="hidden" multiple @change="handleFileUpload" accept=".xml">
+        </label>
+      </div>
+    </div>
+
+    <!-- 加载状态 -->
+    <div v-if="isLoading" class="flex justify-center items-center py-8">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+    </div>
+
+    <!-- 双栏布局：联系人列表和消息对话 -->
+    <div v-else class="flex gap-4 h-[calc(100vh-12rem)]">
+      <!-- 联系人列表 -->
+      <div class="w-1/3 overflow-y-auto border rounded-lg dark:border-gray-700">
+        <ContactList 
+          :messages="filteredMessages"
+          @select-contact="handleContactSelect" />
+      </div>
+      
+      <!-- 消息对话界面 -->
+      <div class="flex-1 overflow-y-auto border rounded-lg dark:border-gray-700 p-4">
+        <MessageList 
+          v-if="selectedContactMessages.length"
+          :messages="selectedContactMessages" />
+        <div v-else class="h-full flex items-center justify-center text-gray-500 dark:text-gray-400">
+          选择联系人以查看对话
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

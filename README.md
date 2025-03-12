@@ -22,6 +22,12 @@ This project wouldn't be possible without [SMS Backup & Restore](https://play.go
   > Unread message counter support
 - 📱 独立滚动的联系人和消息列表
   > Independent scrolling for contacts and messages
+- 📞 通话记录分析功能
+  > Call history analysis features
+- 📊 通话时长统计和类型筛选
+  > Call duration statistics and type filtering
+- 📅 通话时间线展示
+  > Call timeline display
 - 🌓 支持深色/浅色主题
   > Dark/Light theme support
 - 🚀 快速且轻量，完全在浏览器端运行
@@ -75,17 +81,92 @@ pnpm build
    - 浏览器关闭或刷新页面后数据自动清除
    - 不使用本地存储（LocalStorage/IndexedDB），确保隐私安全
 
+### 状态管理与数据流 | State Management & Data Flow
+
+项目采用 Vue 3 的 Composition API 和响应式系统管理状态：
+
+1. 全局状态管理：
+   - 使用 `ref` 和 `reactive` 管理消息和联系人数据
+   - 通过 `provide/inject` 实现跨组件状态共享
+   - 采用 `computed` 属性处理数据过滤和排序
+
+2. 数据流转机制：
+   - XML 解析结果 → 全局状态 → 组件级状态
+   - 单向数据流，确保状态变更可追踪
+   - 组件通过 `props` 和事件通信
+
+### 组件通信架构 | Component Communication
+
+采用多种组件通信方式，确保数据流转清晰：
+
+1. Props Down：
+   - 父组件向子组件传递数据和配置
+   - 采用单向数据流，避免子组件直接修改 props
+
+2. Events Up：
+   - 子组件通过 `emit` 向父组件发送事件
+   - 实现用户交互和状态更新的闭环
+
+3. 跨组件通信：
+   - 使用 `provide/inject` 共享全局状态
+   - 复杂场景采用事件总线机制
+
+### 路由系统设计 | Router System
+
+基于 Vue Router 实现 SPA 路由管理：
+
+1. 路由配置：
+   - 采用配置式路由定义
+   - 支持路由懒加载优化性能
+   - 实现路由守卫控制访问权限
+
+2. 视图组织：
+   - 主要视图：短信预览和通话记录
+   - 组件复用：共享布局和导航组件
+   - 路由参数传递：支持查询参数和动态路由
+
+### 错误处理机制 | Error Handling
+
+采用多层次的错误处理策略：
+
+1. XML 解析错误：
+   - 文件格式校验
+   - 解析过程异常捕获
+   - 友好的错误提示界面
+
+2. 运行时错误：
+   - 全局错误边界捕获
+   - 组件级错误处理
+   - 降级展示机制
+
 ### 代码结构说明 | Code Structure
 
-- `src/utils/xmlParser.js`: XML 解析核心逻辑
-  - `parseXMLFile()`: 主要解析函数
-  - `formatMessageType()`: 消息类型格式化
-  - `formatDateTime()`: 日期时间格式化
+项目采用模块化组织，职责划分明确：
+
+- `src/utils/`：工具函数模块
+  - `xmlParser.js`: XML 解析核心逻辑
+    - `parseXMLFile()`: 主要解析函数
+    - `formatMessageType()`: 消息类型格式化
+    - `formatDateTime()`: 日期时间格式化
+  - `callParser.js`: 通话记录解析模块
+    - `parseCallHistory()`: 通话记录解析
+    - `calculateDuration()`: 通话时长计算
 
 - `src/components/`: Vue 组件
   - `SearchBar.vue`: 搜索组件（支持实时搜索和防抖）
-  - `ContactList.vue`: 联系人列表
-  - `MessageList.vue`: 消息列表
+  - `ContactList.vue`: 联系人列表组件
+  - `MessageList.vue`: 消息列表组件
+  - `CallList.vue`: 通话记录组件
+  - `ExportDialog.vue`: 导出对话框组件
+
+- `src/views/`: 页面视图组件
+  - `SMSView.vue`: 短信预览主视图
+  - `CallsView.vue`: 通话记录视图
+
+- `src/composables/`: 可复用的组合式函数
+  - 封装常用的业务逻辑
+  - 提供状态管理能力
+  - 实现功能模块复用
 
 ## 📝 开源协议 | License
 
