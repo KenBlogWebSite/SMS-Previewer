@@ -1,12 +1,14 @@
 <script setup>
 // 导入必要的组件和函数
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import MessageList from './components/MessageList.vue'
+import ContactList from './components/ContactList.vue'
 import { parseXMLFile } from './utils/xmlParser'
 
 // 状态管理
 const messages = ref([])
 const isLoading = ref(false)
+const selectedContact = ref(null)
 
 // 处理文件上传
 async function handleFileUpload(event) {
@@ -23,6 +25,17 @@ async function handleFileUpload(event) {
     isLoading.value = false
   }
 }
+
+// 处理联系人选择
+function handleContactSelect(contactId) {
+  selectedContact.value = contactId
+}
+
+// 过滤当前联系人的消息
+const currentContactMessages = computed(() => {
+  if (!selectedContact.value) return []
+  return messages.value.filter(msg => msg.address === selectedContact.value)
+})
 </script>
 
 <template>
@@ -52,10 +65,10 @@ async function handleFileUpload(event) {
         </div>
       </div>
 
-      <!-- 短信列表区域 -->
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
-        <div class="p-6">
-          <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">短信列表</h2>
+      <!-- 主要内容区域 -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
+        <!-- 联系人列表 -->
+        <div class="border-r border-gray-200 dark:border-gray-700">
           <!-- 加载状态显示 -->
           <div v-if="isLoading" class="flex justify-center items-center py-8">
             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white"></div>
@@ -64,9 +77,19 @@ async function handleFileUpload(event) {
           <div v-else-if="messages.length === 0" class="text-center py-8">
             <p class="text-gray-500 dark:text-gray-400">请上传短信备份文件</p>
           </div>
-          <!-- 短信列表 -->
-          <div v-else class="space-y-4">
-            <MessageList :messages="messages" />
+          <!-- 联系人列表 -->
+          <div v-else>
+            <ContactList :messages="messages" @select-contact="handleContactSelect" />
+          </div>
+        </div>
+
+        <!-- 消息内容区域 -->
+        <div class="col-span-1 md:col-span-2 lg:col-span-3 p-6">
+          <div v-if="!selectedContact" class="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
+            <p>请选择联系人查看对话</p>
+          </div>
+          <div v-else>
+            <MessageList :messages="currentContactMessages" />
           </div>
         </div>
       </div>
