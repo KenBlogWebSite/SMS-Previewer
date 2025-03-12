@@ -59,6 +59,34 @@ pnpm build
 4. 即可查看短信记录
    > View your SMS records
 
+## 👨‍💻 To 开发者 | For Developers
+
+### XML 文件处理机制 | XML File Processing
+
+本项目采用纯浏览器端处理方案，所有数据操作均在客户端完成，确保用户隐私安全：
+
+1. 文件上传：使用 File API 读取用户选择的 XML 文件
+2. 解析过程：
+   - 使用 `FileReader` 读取文件内容
+   - 通过 `DOMParser` 解析 XML 结构
+   - 提取短信数据并转换为应用内部数据结构
+3. 数据存储：
+   - 所有数据临时存储在内存中（Vue 的响应式状态）
+   - 浏览器关闭或刷新页面后数据自动清除
+   - 不使用本地存储（LocalStorage/IndexedDB），确保隐私安全
+
+### 代码结构说明 | Code Structure
+
+- `src/utils/xmlParser.js`: XML 解析核心逻辑
+  - `parseXMLFile()`: 主要解析函数
+  - `formatMessageType()`: 消息类型格式化
+  - `formatDateTime()`: 日期时间格式化
+
+- `src/components/`: Vue 组件
+  - `SearchBar.vue`: 搜索组件（支持实时搜索和防抖）
+  - `ContactList.vue`: 联系人列表
+  - `MessageList.vue`: 消息列表
+
 ## 📝 开源协议 | License
 
 本项目采用 [知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议（CC BY-NC-SA 4.0）](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 进行许可。
