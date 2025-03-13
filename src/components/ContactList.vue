@@ -51,44 +51,88 @@ const contactGroups = computed(() => {
 </script>
 
 <template>
-  <div class="divide-y divide-gray-200 dark:divide-gray-700">
-    <div v-for="contact in contactGroups" 
-         :key="contact.id"
-         @click="selectedContactId = contact.id; emit('select-contact', contact.id)"
-         :class="[
-           'flex items-center space-x-4 p-4 cursor-pointer transition-all duration-200 border-l-4',
-           selectedContactId === contact.id
-             ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-500 dark:border-blue-400'
-             : 'hover:bg-gray-50 dark:hover:bg-gray-700 border-transparent'
-         ]">
+  <md-list class="md-typescale-body-medium">
+    <md-list-item
+      v-for="contact in contactGroups"
+      :key="contact.id"
+      @click="selectedContactId = contact.id; emit('select-contact', contact.id)"
+      :selected="selectedContactId === contact.id"
+      class="contact-item"
+    >
       <!-- 联系人头像 -->
-      <div class="flex-shrink-0 w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center">
-        <span class="text-lg font-medium text-gray-600 dark:text-gray-300">
-          {{ contact.name[0].toUpperCase() }}
-        </span>
+      <div slot="start" class="avatar">
+        <span class="avatar-text">{{ contact.name[0].toUpperCase() }}</span>
       </div>
-      
+
       <!-- 联系人信息 -->
-      <div class="flex-1 min-w-0">
-        <div class="flex items-center justify-between">
-          <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
-            {{ contact.name }}
-          </p>
-          <p class="text-xs text-gray-500 dark:text-gray-400">
-            {{ formatDateTime(contact.lastMessage.date) }}
-          </p>
+      <div class="contact-info">
+        <div class="contact-header">
+          <span class="md-typescale-title-medium">{{ contact.name }}</span>
+          <span class="md-typescale-label-medium time-text">{{ formatDateTime(contact.lastMessage.date) }}</span>
         </div>
-        <div class="flex items-center justify-between">
-          <p class="text-sm text-gray-500 dark:text-gray-400 truncate">
-            {{ contact.lastMessage.body }}
-          </p>
-          <!-- 未读消息计数 -->
-          <div v-if="contact.unreadCount > 0" 
-               class="flex-shrink-0 ml-2 px-2 py-0.5 text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 rounded-full">
-            {{ contact.unreadCount }}
-          </div>
+        <div class="contact-body">
+          <span class="message-text">{{ contact.lastMessage.body }}</span>
+          <md-badge v-if="contact.unreadCount > 0">{{ contact.unreadCount }}</md-badge>
         </div>
       </div>
-    </div>
-  </div>
+    </md-list-item>
+  </md-list>
 </template>
+
+<style scoped>
+.contact-item {
+  --md-list-item-list-item-container-color: var(--md-sys-color-surface);
+  --md-list-item-list-item-container-shape: 0;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.contact-item[selected] {
+  --md-list-item-list-item-container-color: var(--md-sys-color-secondary-container);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: var(--md-sys-color-secondary-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+}
+
+.avatar-text {
+  color: var(--md-sys-color-on-secondary-container);
+  font-weight: 500;
+}
+
+.contact-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.contact-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.time-text {
+  color: var(--md-sys-color-outline);
+}
+
+.contact-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.message-text {
+  color: var(--md-sys-color-on-surface-variant);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 8px;
+}
+</style>

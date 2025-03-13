@@ -39,25 +39,27 @@ function handleKeyDown(event) {
 </script>
 
 <template>
-  <div class="p-4 bg-white dark:bg-gray-800 shadow rounded-lg">
-    <div class="flex flex-col md:flex-row gap-4">
-      <div class="flex-1">
+  <div class="p-3 sm:p-4 bg-white dark:bg-gray-800 shadow rounded-lg" :style="{ borderRadius: '16px' }">
+    <div class="flex flex-col gap-3">
+      <div class="w-full">
         <input
           v-model="searchQuery"
           type="text"
           placeholder="搜索消息内容或手机号..."
           @keydown="handleKeyDown"
-          class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
+          :style="{ borderRadius: '12px' }"
         />
       </div>
-      <div class="flex-1">
+      <div class="w-full">
         <input
           v-model="searchDate"
           type="date"
-          class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
+          :style="{ borderRadius: '12px' }"
         />
       </div>
-      <div class="flex gap-4">
+      <div class="flex flex-wrap items-center justify-between gap-2">
         <label class="flex items-center text-sm text-gray-600 dark:text-gray-300">
           <input
             type="checkbox"
@@ -68,7 +70,8 @@ function handleKeyDown(event) {
         </label>
         <button
           @click="handleSearch"
-          class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+          class="px-5 py-2 bg-primary text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+          :style="{ borderRadius: '12px' }"
         >
           搜索
         </button>

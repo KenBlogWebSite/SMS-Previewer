@@ -1,6 +1,9 @@
 <script setup>
 import { computed } from 'vue'
 import { formatMessageType, formatDateTime } from '../utils/xmlParser'
+import { useTheme } from '../composables/useTheme'
+
+const { currentThemeConfig } = useTheme()
 
 const props = defineProps({
   messages: {
@@ -25,56 +28,58 @@ const groupedMessages = computed(() => {
 </script>
 
 <template>
-  <div class="space-y-8">
+  <div class="space-y-6">
     <!-- 按日期分组显示消息 -->
-    <div v-for="[date, messages] in groupedMessages" :key="date" class="space-y-4">
+    <div v-for="[date, messages] in groupedMessages" :key="date" class="space-y-3">
       <!-- 日期分隔线 -->
-      <div class="flex items-center">
-        <div class="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
-        <span class="mx-4 text-sm text-gray-500 dark:text-gray-400">{{ date }}</span>
-        <div class="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
-      </div>
+      <mdui-divider>
+        <span class="text-sm text-gray-500 dark:text-gray-400">{{ date }}</span>
+      </mdui-divider>
 
       <!-- 当天的消息列表 -->
-      <div class="space-y-4">
+      <div class="space-y-3">
         <div v-for="message in messages" :key="message.date.getTime()" 
              class="flex flex-col space-y-1">
           <!-- 消息气泡 -->
-          <div :class="[
-            'max-w-[80%] rounded-lg p-4',
-            message.type === 2 ? 
-              'bg-blue-500 text-white ml-auto' : 
-              'bg-gray-100 dark:bg-gray-700'
-          ]">
-            <!-- 发送者信息 -->
-            <div class="flex items-center justify-between text-sm mb-1">
-              <span :class="{
-                'text-gray-600 dark:text-gray-300': message.type !== 2,
-                'text-blue-100': message.type === 2
-              }">
-                {{ message.contactName === '(Unknown)' ? message.address : message.contactName }}
-              </span>
-              <span :class="{
-                'text-gray-500 dark:text-gray-400': message.type !== 2,
-                'text-blue-100': message.type === 2
-              }" class="text-xs">
-                {{ formatDateTime(message.date).split(' ')[1] }}
-              </span>
-            </div>
-            <!-- 消息内容 -->
-            <p class="whitespace-pre-wrap break-words">{{ message.body }}</p>
-          </div>
+          <mdui-card 
+            :class="[
+              'max-w-[85%] sm:max-w-[75%] p-0 overflow-hidden',
+              message.type === 2 ? 'ml-auto' : ''
+            ]"
+            :style="{
+              backgroundColor: message.type === 2 ? 'var(--mdui-color-primary)' : 'var(--mdui-color-surface-variant)',
+              borderRadius: '16px'
+            }"
+            variant="outlined"
+          >
+            <mdui-card-content class="p-4">
+              <!-- 发送者信息 -->
+              <div class="flex items-center justify-between text-sm mb-1">
+                <mdui-text-field-helper-text :style="{
+                  color: message.type === 2 ? 'var(--mdui-color-on-primary)' : 'var(--mdui-color-on-surface-variant)'
+                }">
+                  {{ message.contactName === '(Unknown)' ? message.address : message.contactName }}
+                </mdui-text-field-helper-text>
+                <mdui-text-field-helper-text :style="{
+                  color: message.type === 2 ? 'var(--mdui-color-on-primary)' : 'var(--mdui-color-on-surface-variant)'
+                }">
+                  {{ formatDateTime(message.date).split(' ')[1] }}
+                </mdui-text-field-helper-text>
+              </div>
+              <!-- 消息内容 -->
+              <p class="whitespace-pre-wrap break-words text-sm sm:text-base" :style="{
+                color: message.type === 2 ? 'var(--mdui-color-on-primary)' : 'var(--mdui-color-on-surface-variant)'
+              }">{{ message.body }}</p>
+            </mdui-card-content>
+          </mdui-card>
 
           <!-- 消息状态 -->
-          <div :class="[
-            'text-xs',
+          <mdui-text-field-helper-text :class="[
             message.type === 2 ? 'text-right' : 'text-left'
           ]">
-            <span class="text-gray-500 dark:text-gray-400">
-              {{ formatMessageType(message.type) }}
-              {{ message.read ? '已读' : '未读' }}
-            </span>
-          </div>
+            {{ formatMessageType(message.type) }}
+            {{ message.read ? '已读' : '未读' }}
+          </mdui-text-field-helper-text>
         </div>
       </div>
     </div>

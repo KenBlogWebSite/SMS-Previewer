@@ -1,10 +1,15 @@
 <script setup>
 import { ref } from 'vue'
 import { RouterView, RouterLink } from 'vue-router'
+import ThemeSwitch from './components/ThemeSwitch.vue'
+import { useTheme } from './composables/useTheme'
 
 // 错误提示状态
 const errorMessage = ref('')
 const showError = ref(false)
+
+// 主题配置
+const { currentThemeConfig } = useTheme()
 
 // 监听错误事件
 window.addEventListener('show-error', (event) => {
@@ -18,48 +23,49 @@ window.addEventListener('show-error', (event) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+  <div class="min-h-screen" :style="{
+    backgroundColor: currentThemeConfig.colors.background,
+    color: currentThemeConfig.colors.text
+  }">
     <!-- 顶部导航栏 -->
-    <header class="bg-white dark:bg-gray-800 shadow">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div class="flex justify-between items-center">
-          <h1 class="text-2xl font-bold text-gray-900 dark:text-white">SMS Previewer</h1>
-          <nav class="flex space-x-4">
-            <RouterLink 
-              to="/sms" 
-              class="px-3 py-2 rounded-md text-sm font-medium" 
-              :class="{
-                'bg-blue-500 text-white': $route.path === '/sms',
-                'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white': $route.path !== '/sms'
-              }"
-            >
-              短信记录
-            </RouterLink>
-            <RouterLink 
-              to="/calls" 
-              class="px-3 py-2 rounded-md text-sm font-medium"
-              :class="{
-                'bg-blue-500 text-white': $route.path === '/calls',
-                'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white': $route.path !== '/calls'
-              }"
-            >
-              通话记录
-            </RouterLink>
-          </nav>
-        </div>
+    <mdui-top-app-bar class="sticky top-0 z-40">
+      <h1 class="text-lg sm:text-xl md:text-2xl font-bold">SMS Previewer</h1>
+      <div slot="end">
+        <mdui-segmented-button-group>
+          <mdui-segmented-button 
+            :selected="$route.path === '/sms'"
+            @click="$router.push('/sms')"
+          >
+            <mdui-icon slot="icon" name="sms"></mdui-icon>
+            短信记录
+          </mdui-segmented-button>
+          <mdui-segmented-button 
+            :selected="$route.path === '/calls'"
+            @click="$router.push('/calls')"
+          >
+            <mdui-icon slot="icon" name="call"></mdui-icon>
+            通话记录
+          </mdui-segmented-button>
+        </mdui-segmented-button-group>
       </div>
-    </header>
+    </mdui-top-app-bar>
 
     <!-- 主要内容区域 -->
-    <RouterView />
+    <div class="container mx-auto px-4 py-6 md:px-6 lg:px-8">
+      <RouterView />
+    </div>
+
+    <!-- 主题切换组件 -->
+    <ThemeSwitch />
 
     <!-- 错误提示 -->
-    <div
+    <mdui-snackbar
       v-if="showError"
-      class="fixed bottom-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-300 transform translate-y-0 opacity-100"
-      :class="{ 'translate-y-full opacity-0': !showError }"
+      :open="showError"
+      action="关闭"
+      @close="showError = false"
     >
       {{ errorMessage }}
-    </div>
+    </mdui-snackbar>
   </div>
 </template>
