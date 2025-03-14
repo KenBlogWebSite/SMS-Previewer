@@ -19,7 +19,7 @@
           :selected="currentTheme === theme"
         >
           <mdui-list-item-icon>
-            <mdui-icon name="format_paint"></mdui-icon>
+            <mdui-icon name="palette"></mdui-icon>
           </mdui-list-item-icon>
           <mdui-list-item-content>
             <span class="text-sm">{{ label }}</span>

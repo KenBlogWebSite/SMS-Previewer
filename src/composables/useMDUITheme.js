@@ -43,6 +43,23 @@ export function useMDUITheme() {
     document.documentElement.style.setProperty('--mdui-color-inverse-on-surface', config.colors.inverseOnSurface || '#313033');
     document.documentElement.style.setProperty('--mdui-color-inverse-primary', config.colors.inversePrimary || '#6750A4');
     
+    // 新增 Material Design 3 的表面色调变体
+    document.documentElement.style.setProperty('--mdui-color-surface-dim', config.colors.surfaceDim || '#DED8E1');
+    document.documentElement.style.setProperty('--mdui-color-surface-bright', config.colors.surfaceBright || '#FFFBFF');
+    document.documentElement.style.setProperty('--mdui-color-surface-container-lowest', config.colors.surfaceContainerLowest || '#FFFFFF');
+    document.documentElement.style.setProperty('--mdui-color-surface-container-low', config.colors.surfaceContainerLow || '#F7F2FA');
+    document.documentElement.style.setProperty('--mdui-color-surface-container', config.colors.surfaceContainer || '#F3EDF7');
+    document.documentElement.style.setProperty('--mdui-color-surface-container-high', config.colors.surfaceContainerHigh || '#ECE6F0');
+    document.documentElement.style.setProperty('--mdui-color-surface-container-highest', config.colors.surfaceContainerHighest || '#E6E0E9');
+    
+    // 设置状态层不透明度
+    if (config.colors.stateLayerOpacity) {
+      document.documentElement.style.setProperty('--mdui-state-hover-opacity', config.colors.stateLayerOpacity.hover || '0.08');
+      document.documentElement.style.setProperty('--mdui-state-focus-opacity', config.colors.stateLayerOpacity.focus || '0.12');
+      document.documentElement.style.setProperty('--mdui-state-pressed-opacity', config.colors.stateLayerOpacity.pressed || '0.12');
+      document.documentElement.style.setProperty('--mdui-state-dragged-opacity', config.colors.stateLayerOpacity.dragged || '0.16');
+    }
+    
     // 设置圆角 - Material 3 形状系统
     document.documentElement.style.setProperty('--mdui-shape-corner-extra-small', '4px');
     document.documentElement.style.setProperty('--mdui-shape-corner-small', '8px');
@@ -55,6 +72,8 @@ export function useMDUITheme() {
       document.documentElement.style.setProperty('--mdui-elevation-level1', config.colors.elevation.level1);
       document.documentElement.style.setProperty('--mdui-elevation-level2', config.colors.elevation.level2);
       document.documentElement.style.setProperty('--mdui-elevation-level3', config.colors.elevation.level3);
+      document.documentElement.style.setProperty('--mdui-elevation-level4', config.colors.elevation.level4 || config.colors.elevation.level3);
+      document.documentElement.style.setProperty('--mdui-elevation-level5', config.colors.elevation.level5 || config.colors.elevation.level3);
     }
     
     // 设置全局CSS变量，用于Tailwind和其他组件
@@ -64,6 +83,15 @@ export function useMDUITheme() {
     document.documentElement.style.setProperty('--color-background', config.colors.background);
     document.documentElement.style.setProperty('--color-surface', config.colors.surface);
     document.documentElement.style.setProperty('--color-text', config.colors.text);
+    
+    // 新增表面色调变体的全局变量
+    document.documentElement.style.setProperty('--color-surface-dim', config.colors.surfaceDim);
+    document.documentElement.style.setProperty('--color-surface-bright', config.colors.surfaceBright);
+    document.documentElement.style.setProperty('--color-surface-container-lowest', config.colors.surfaceContainerLowest);
+    document.documentElement.style.setProperty('--color-surface-container-low', config.colors.surfaceContainerLow);
+    document.documentElement.style.setProperty('--color-surface-container', config.colors.surfaceContainer);
+    document.documentElement.style.setProperty('--color-surface-container-high', config.colors.surfaceContainerHigh);
+    document.documentElement.style.setProperty('--color-surface-container-highest', config.colors.surfaceContainerHighest);
   };
   
   // 监听主题变化并更新MDUI变量

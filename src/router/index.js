@@ -3,7 +3,16 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
+    name: 'Welcome',
+    component: () => import('../views/WelcomeView.vue')
+  },
+  {
+    path: '/local',
     redirect: '/sms'
+  },
+  {
+    path: '/server',
+    redirect: '/sms' // 暂时也重定向到SMS页面，未来可以实现服务器特定功能
   },
   {
     path: '/sms',

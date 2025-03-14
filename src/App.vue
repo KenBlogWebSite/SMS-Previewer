@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue'
-import { RouterView, RouterLink } from 'vue-router'
+import { ref, computed } from 'vue'
+import { RouterView, RouterLink, useRoute } from 'vue-router'
 import ThemeSwitch from './components/ThemeSwitch.vue'
 import { useTheme } from './composables/useTheme'
 
@@ -10,6 +10,10 @@ const showError = ref(false)
 
 // 主题配置
 const { currentThemeConfig } = useTheme()
+
+// 获取当前路由
+const route = useRoute()
+const showNavbar = computed(() => route.path !== '/')
 
 // 监听错误事件
 window.addEventListener('show-error', (event) => {
@@ -27,8 +31,8 @@ window.addEventListener('show-error', (event) => {
     backgroundColor: currentThemeConfig.colors.background,
     color: currentThemeConfig.colors.text
   }">
-    <!-- 顶部导航栏 -->
-    <mdui-top-app-bar class="sticky top-0 z-40">
+    <!-- 顶部导航栏 - 只在非欢迎页面显示 -->
+    <mdui-top-app-bar v-if="showNavbar" class="sticky top-0 z-40">
       <h1 class="text-lg sm:text-xl md:text-2xl font-bold">SMS Previewer</h1>
       <div slot="end">
         <mdui-segmented-button-group>

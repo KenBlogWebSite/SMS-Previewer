@@ -13,7 +13,7 @@ const props = defineProps({
 })
 
 // 获取主题配置
-const { currentThemeConfig } = useTheme()
+const { currentThemeConfig, isDark } = useTheme()
 
 // 按日期分组通话记录
 const groupedCalls = computed(() => {
@@ -35,7 +35,7 @@ const groupedCalls = computed(() => {
     <div v-for="[date, calls] in groupedCalls" :key="date" class="space-y-3">
       <!-- 日期分隔线 -->
       <md-divider>
-        <span class="text-sm text-gray-500 dark:text-gray-400">{{ date }}</span>
+        <span class="text-sm" style="color: var(--mdui-color-on-surface-variant);">{{ date }}</span>
       </md-divider>
 
       <!-- 当天的通话记录列表 -->
@@ -45,7 +45,7 @@ const groupedCalls = computed(() => {
           :key="call.date.getTime()" 
           class="w-full p-4 rounded-lg"
           :style="{
-            backgroundColor: 'var(--mdui-color-surface)',
+            backgroundColor: 'var(--mdui-color-surface-container)',
             boxShadow: 'var(--mdui-elevation-level1)'
           }"
         >
@@ -68,10 +68,10 @@ const groupedCalls = computed(() => {
                 </span>
               </div>
               <div>
-                <h3 class="text-lg font-medium md-title">
+                <h3 class="text-lg font-medium md-title" style="color: var(--mdui-color-on-surface);">
                   {{ call.contactName === '(Unknown)' ? call.number : call.contactName }}
                 </h3>
-                <p class="text-sm md-body-small" style="color: var(--mdui-color-on-surface-variant)">
+                <p class="text-sm md-body-small" style="color: var(--mdui-color-on-surface-variant);">
                   {{ formatDateTime(call.date) }}
                 </p>
               </div>
@@ -88,7 +88,7 @@ const groupedCalls = computed(() => {
                 }" class="text-sm font-medium">
                   {{ formatCallType(call.type) }}
                 </span>
-                <span class="text-sm" style="color: var(--mdui-color-on-surface-variant)">
+                <span class="text-sm" style="color: var(--mdui-color-on-surface-variant);">
                   {{ formatDuration(call.duration) }}
                 </span>
               </div>
@@ -99,7 +99,7 @@ const groupedCalls = computed(() => {
     </div>
 
     <!-- 无数据提示 -->
-    <div v-if="props.calls.length === 0" class="flex flex-col items-center justify-center py-12">
+    <div v-if="props.calls.length === 0" class="flex flex-col items-center justify-center py-12" style="background-color: var(--mdui-color-surface-container-low); border-radius: var(--mdui-shape-corner-large);">
       <md-icon style="font-size: 48px; color: var(--mdui-color-outline);">phone_missed</md-icon>
       <p class="mt-4 text-center" style="color: var(--mdui-color-on-surface-variant);">
         暂无通话记录，请上传通话记录文件
