@@ -5,14 +5,9 @@ import { useTheme } from '../composables/useTheme'
 const router = useRouter()
 const { currentThemeConfig } = useTheme()
 
-// 导航到本地模式
-function navigateToLocal() {
-  router.push('/local')
-}
-
-// 导航到服务器模式
-function navigateToServer() {
-  router.push('/server')
+// 导航函数
+function navigate(mode, type) {
+  router.push(`/${mode}/${type}`)
 }
 </script>
 
@@ -46,10 +41,20 @@ function navigateToServer() {
           </div>
           <h2 class="text-2xl font-semibold mb-2" style="color: var(--mdui-color-on-surface);">本地模式</h2>
           <p class="mb-4" style="color: var(--mdui-color-on-surface-variant);">通过上传XML文件在本地查看短信和通话记录</p>
-          <mdui-button variant="tonal" @click="navigateToLocal">
-            <mdui-icon slot="icon" name="arrow_forward"></mdui-icon>
-            开始使用
-          </mdui-button>
+          <div class="flex gap-2">
+            <mdui-button variant="tonal" @click="navigate('local', 'sms')">
+              <template v-slot:icon>
+                <mdui-icon name="sms"></mdui-icon>
+              </template>
+              短信记录
+            </mdui-button>
+            <mdui-button variant="tonal" @click="navigate('local', 'calls')">
+              <template v-slot:icon>
+                <mdui-icon name="call"></mdui-icon>
+              </template>
+              通话记录
+            </mdui-button>
+          </div>
         </div>
       </div>
       
@@ -73,10 +78,20 @@ function navigateToServer() {
           </div>
           <h2 class="text-2xl font-semibold mb-2" style="color: var(--mdui-color-on-surface);">服务器模式</h2>
           <p class="mb-4" style="color: var(--mdui-color-on-surface-variant);">连接到服务器自动解析上传的XML文件</p>
-          <mdui-button variant="tonal" @click="navigateToServer">
-            <mdui-icon slot="icon" name="arrow_forward"></mdui-icon>
-            开始使用
-          </mdui-button>
+          <div class="flex gap-2">
+            <mdui-button variant="tonal" @click="navigate('server', 'sms')">
+              <template v-slot:icon>
+                <mdui-icon name="sms"></mdui-icon>
+              </template>
+              短信记录
+            </mdui-button>
+            <mdui-button variant="tonal" @click="navigate('server', 'calls')">
+              <template v-slot:icon>
+                <mdui-icon name="call"></mdui-icon>
+              </template>
+              通话记录
+            </mdui-button>
+          </div>
         </div>
       </div>
     </div>

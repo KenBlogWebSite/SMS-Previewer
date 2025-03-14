@@ -87,8 +87,23 @@ const groupedMessages = computed(() => {
 </template>
 
 <style scoped>
-/* 消息气泡的阴影效果 */
-.max-w-[80%] {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+/* 消息气泡的样式 */
+.max-w-\[85\%\] {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.max-w-\[85\%\]:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.mdui-card-content {
+  padding: 12px 16px;
+}
+
+/* 优化文本排版 */
+.whitespace-pre-wrap {
+  line-height: 1.5;
+  letter-spacing: 0.2px;
 }
 </style>

@@ -8,21 +8,41 @@ const routes = [
   },
   {
     path: '/local',
-    redirect: '/sms'
+    children: [
+      {
+        path: 'sms',
+        name: 'LocalSMS',
+        component: () => import('../views/SMSView.vue')
+      },
+      {
+        path: 'calls',
+        name: 'LocalCalls',
+        component: () => import('../views/CallsView.vue')
+      },
+      {
+        path: '',
+        redirect: '/local/sms'
+      }
+    ]
   },
   {
     path: '/server',
-    redirect: '/sms' // 暂时也重定向到SMS页面，未来可以实现服务器特定功能
-  },
-  {
-    path: '/sms',
-    name: 'SMS',
-    component: () => import('../views/SMSView.vue')
-  },
-  {
-    path: '/calls',
-    name: 'Calls',
-    component: () => import('../views/CallsView.vue')
+    children: [
+      {
+        path: 'sms',
+        name: 'ServerSMS',
+        component: () => import('../views/SMSView.vue')
+      },
+      {
+        path: 'calls',
+        name: 'ServerCalls',
+        component: () => import('../views/CallsView.vue')
+      },
+      {
+        path: '',
+        redirect: '/server/sms'
+      }
+    ]
   }
 ]
 

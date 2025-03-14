@@ -1,5 +1,58 @@
 # 开发日志 | Development Log
 
+## 2025年3月14日更新
+
+### 项目调试状态
+
+#### 当前问题
+- 文件上传功能存在稳定性问题，需要优化错误处理
+- 导航按钮在某些设备上显示异常
+- 错误提示样式需要调整以提升用户体验
+
+#### 进行中的优化
+- 重构文件处理逻辑，提升稳定性
+- 优化响应式布局适配
+- 统一错误提示样式
+
+### 项目文件结构说明
+
+#### 根目录配置文件
+- `vite.config.js`: 项目构建配置，使用Vite作为构建工具
+- `tailwind.config.js`: Tailwind CSS配置，定制UI样式系统
+- `postcss.config.js`: PostCSS配置，用于CSS处理
+- `package.json`: 项目依赖管理和脚本配置
+
+#### 源代码目录 (src)
+
+##### 核心文件
+- `main.js`: 应用入口文件，初始化Vue应用和全局配置
+- `App.vue`: 根组件，定义应用整体布局
+- `style.css`: 全局样式定义，包含Tailwind和自定义样式
+
+##### 功能模块
+- `api/serverApi.js`: 服务器API接口封装
+- `utils/xmlParser.js`: XML解析工具，处理备份文件
+- `utils/callParser.js`: 通话记录解析模块
+
+##### 组件目录 (components)
+- `CallList.vue`: 通话记录列表组件
+- `ContactList.vue`: 联系人列表组件
+- `MessageList.vue`: 消息列表组件
+- `SearchBar.vue`: 搜索栏组件
+- `ExportDialog.vue`: 导出对话框组件
+- `ThemeSwitch.vue`: 主题切换组件
+
+##### 页面视图 (views)
+- `WelcomeView.vue`: 欢迎页面
+- `SMSView.vue`: 短信查看页面
+- `CallsView.vue`: 通话记录页面
+
+##### 组合式函数 (composables)
+- `useDevice.js`: 设备适配逻辑
+- `useTheme.js`: 主题管理
+- `useMDUITheme.js`: MD风格UI主题
+- `useServerMode.js`: 服务器模式管理
+
 ## 2025年3月13日更新
 
 ### 通话记录功能模块

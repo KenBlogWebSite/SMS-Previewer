@@ -65,13 +65,20 @@ watchEffect(() => {
     <div class="mb-6 flex flex-col md:flex-row gap-4 items-center">
       <SearchBar @search="handleSearch" class="flex-grow" />
       <div class="flex-shrink-0">
-        <md-filled-button>
-          <label class="flex items-center cursor-pointer">
+        <input
+          type="file"
+          ref="fileInput"
+          class="hidden"
+          multiple
+          @change="handleFileUpload"
+          accept=".xml"
+        >
+        <md-filled-tonal-button @click="$refs.fileInput.click()">
+          <template #icon>
             <md-icon>upload_file</md-icon>
-            <span class="ml-2">上传通话记录文件</span>
-            <input type="file" class="hidden" multiple @change="handleFileUpload" accept=".xml">
-          </label>
-        </md-filled-button>
+          </template>
+          <span>上传通话记录文件</span>
+        </md-filled-tonal-button>
       </div>
     </div>
 
