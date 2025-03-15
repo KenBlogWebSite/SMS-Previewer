@@ -3,17 +3,52 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
-    redirect: '/sms'
+    name: 'Welcome',
+    component: () => import('../views/WelcomeView.vue')
   },
   {
-    path: '/sms',
-    name: 'SMS',
-    component: () => import('../views/SMSView.vue')
+    path: '/local',
+    component: { 
+      template: '<router-view></router-view>' 
+    },
+    children: [
+      {
+        path: 'sms',
+        name: 'LocalSMS',
+        component: () => import('../views/SMSView.vue')
+      },
+      {
+        path: 'calls',
+        name: 'LocalCalls',
+        component: () => import('../views/CallsView.vue')
+      },
+      {
+        path: '',
+        redirect: '/local/sms'
+      }
+    ]
   },
   {
-    path: '/calls',
-    name: 'Calls',
-    component: () => import('../views/CallsView.vue')
+    path: '/server',
+    component: { 
+      template: '<router-view></router-view>' 
+    },
+    children: [
+      {
+        path: 'sms',
+        name: 'ServerSMS',
+        component: () => import('../views/SMSView.vue')
+      },
+      {
+        path: 'calls',
+        name: 'ServerCalls',
+        component: () => import('../views/CallsView.vue')
+      },
+      {
+        path: '',
+        redirect: '/server/sms'
+      }
+    ]
   }
 ]
 

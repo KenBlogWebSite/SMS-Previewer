@@ -41,54 +41,152 @@ const contactGroups = computed(() => {
   
   // 为每个联系人设置最新消息
   Object.values(groups).forEach(group => {
-    group.messages.sort((a, b) => b.date - a.date)
-    group.lastMessage = group.messages[0]
+    if (group.messages && group.messages.length > 0) {
+      group.messages.sort((a, b) => b.date - a.date)
+      group.lastMessage = group.messages[0]
+    }
   })
   
-  // 按最新消息时间排序
-  return Object.values(groups).sort((a, b) => b.lastMessage.date - a.lastMessage.date)
+  // 按最新消息时间排序，确保lastMessage存在
+  return Object.values(groups)
+    .filter(group => group.lastMessage) // 过滤掉没有最新消息的联系人
+    .sort((a, b) => b.lastMessage.date - a.lastMessage.date)
 })
 </script>
 
 <template>
-  <div class="divide-y divide-gray-200 dark:divide-gray-700">
-    <div v-for="contact in contactGroups" 
-         :key="contact.id"
-         @click="selectedContactId = contact.id; emit('select-contact', contact.id)"
-         :class="[
-           'flex items-center space-x-4 p-4 cursor-pointer transition-all duration-200 border-l-4',
-           selectedContactId === contact.id
-             ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-500 dark:border-blue-400'
-             : 'hover:bg-gray-50 dark:hover:bg-gray-700 border-transparent'
-         ]">
+  <div class="contact-list">
+    <div
+      v-for="contact in contactGroups"
+      :key="contact.id"
+      @click="selectedContactId = contact.id; emit('select-contact', contact.id)"
+      :class="['contact-item', { 'selected': selectedContactId === contact.id }]"
+    >
       <!-- 联系人头像 -->
-      <div class="flex-shrink-0 w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center">
-        <span class="text-lg font-medium text-gray-600 dark:text-gray-300">
-          {{ contact.name[0].toUpperCase() }}
-        </span>
+      <div class="avatar">
+        <span class="avatar-text">{{ contact.name && contact.name.length > 0 ? contact.name[0].toUpperCase() : '?' }}</span>
       </div>
-      
+
       <!-- 联系人信息 -->
-      <div class="flex-1 min-w-0">
-        <div class="flex items-center justify-between">
-          <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
-            {{ contact.name }}
-          </p>
-          <p class="text-xs text-gray-500 dark:text-gray-400">
-            {{ formatDateTime(contact.lastMessage.date) }}
-          </p>
+      <div class="contact-info">
+        <div class="contact-header">
+          <span class="title-medium">{{ contact.name }}</span>
+          <span class="label-medium time-text">{{ contact.lastMessage ? formatDateTime(contact.lastMessage.date) : '' }}</span>
         </div>
-        <div class="flex items-center justify-between">
-          <p class="text-sm text-gray-500 dark:text-gray-400 truncate">
-            {{ contact.lastMessage.body }}
-          </p>
-          <!-- 未读消息计数 -->
-          <div v-if="contact.unreadCount > 0" 
-               class="flex-shrink-0 ml-2 px-2 py-0.5 text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 rounded-full">
-            {{ contact.unreadCount }}
-          </div>
+        <div class="contact-body">
+          <span class="message-text">{{ contact.lastMessage ? contact.lastMessage.body : '' }}</span>
+          <span v-if="contact.unreadCount > 0" class="badge">{{ contact.unreadCount }}</span>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.contact-list {
+  width: 100%;
+  overflow-y: auto;
+  background-color: var(--md-sys-color-surface, #fff);
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  transition: background-color 0.2s;
+}
+
+.contact-item:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.contact-item.selected {
+  background-color: var(--md-sys-color-secondary-container, #e8def8);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--md-sys-color-secondary-container, #e8def8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.avatar-text {
+  font-weight: 500;
+  color: var(--md-sys-color-on-secondary-container, #1d192b);
+}
+
+.contact-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.contact-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.title-medium {
+  font-size: 16px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.time-text {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+  margin-left: 8px;
+}
+
+.contact-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.message-text {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.badge {
+  background-color: var(--md-sys-color-error, #b3261e);
+  color: white;
+  border-radius: 12px;
+  padding: 2px 6px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 8px;
+}
+
+/* 暗色模式适配 */
+@media (prefers-color-scheme: dark) {
+  .contact-item {
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+  }
+  
+  .contact-item:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+  
+  .time-text, .message-text {
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+</style>
