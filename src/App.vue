@@ -13,7 +13,7 @@ const infoMessage = ref('')
 const showInfo = ref(false)
 
 // 主题配置
-const { currentThemeConfig } = useTheme()
+const { currentThemeConfig, isDarkMode } = useTheme()
 
 // 获取当前路由
 const route = useRoute()
@@ -61,15 +61,25 @@ window.addEventListener('show-info', (event) => {
         <h1 class="text-lg sm:text-xl md:text-2xl font-bold">SMS Previewer</h1>
         <div class="flex gap-2">
           <button 
-            class="px-3 py-1 rounded-md hover:bg-purple-100 dark:hover:bg-purple-900"
-            :class="{ 'bg-purple-200 dark:bg-purple-800 text-purple-800 dark:text-purple-100': $route.path.includes('/sms'), 'text-purple-600 dark:text-purple-300': !$route.path.includes('/sms') }"
+            class="px-3 py-1 rounded-md"
+            :class="{ 
+              'bg-[#EADDFF] text-[#21005D] hover:bg-[#D0BCFF]': $route.path.includes('/sms') && !isDarkMode, 
+              'bg-[#4F378B] text-[#EADDFF] hover:bg-[#381E72]': $route.path.includes('/sms') && isDarkMode, 
+              'text-[#65558F] hover:bg-[#F6EDFF]': !$route.path.includes('/sms') && !isDarkMode,
+              'text-[#D0BCFE] hover:bg-[#4A4458]': !$route.path.includes('/sms') && isDarkMode
+            }"
             @click="$router.push('/local/sms')"
           >
             短信记录
           </button>
           <button 
-            class="px-3 py-1 rounded-md hover:bg-purple-100 dark:hover:bg-purple-900"
-            :class="{ 'bg-purple-200 dark:bg-purple-800 text-purple-800 dark:text-purple-100': $route.path.includes('/calls'), 'text-purple-600 dark:text-purple-300': !$route.path.includes('/calls') }"
+            class="px-3 py-1 rounded-md"
+            :class="{ 
+              'bg-[#EADDFF] text-[#21005D] hover:bg-[#D0BCFF]': $route.path.includes('/calls') && !isDarkMode, 
+              'bg-[#4F378B] text-[#EADDFF] hover:bg-[#381E72]': $route.path.includes('/calls') && isDarkMode, 
+              'text-[#65558F] hover:bg-[#F6EDFF]': !$route.path.includes('/calls') && !isDarkMode,
+              'text-[#D0BCFE] hover:bg-[#4A4458]': !$route.path.includes('/calls') && isDarkMode
+            }"
             @click="$router.push('/local/calls')"
           >
             通话记录

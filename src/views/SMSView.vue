@@ -227,10 +227,10 @@ watchEffect(() => {
           @change="handleFileUpload"
           accept=".xml"
         >
-        <button @click="$refs.fileInput.click()" class="px-3 py-1 rounded-md bg-purple-200 dark:bg-purple-800 text-purple-800 dark:text-purple-100 hover:bg-purple-300 dark:hover:bg-purple-700">
+        <button @click="$refs.fileInput.click()" class="px-3 py-1 rounded-md bg-[#EADDFF] dark:bg-[#4F378B] text-[#21005D] dark:text-[#EADDFF] hover:bg-[#D0BCFF] dark:hover:bg-[#381E72]">
           <span>上传短信文件</span>
         </button>
-        <button @click="generateStats" :disabled="messages.length === 0 || processingStats" class="px-3 py-1 rounded-md bg-purple-200 dark:bg-purple-800 text-purple-800 dark:text-purple-100 hover:bg-purple-300 dark:hover:bg-purple-700">
+        <button @click="generateStats" :disabled="messages.length === 0 || processingStats" class="px-3 py-1 rounded-md bg-[#EADDFF] dark:bg-[#4F378B] text-[#21005D] dark:text-[#EADDFF] hover:bg-[#D0BCFF] dark:hover:bg-[#381E72]">
           <span>统计分析</span>
         </button>
       </div>
@@ -254,7 +254,7 @@ watchEffect(() => {
       <div v-else class="h-full flex flex-col">
         <!-- 返回按钮 -->
         <div class="mb-2 flex items-center">
-          <button @click="backToContacts" class="px-3 py-1 rounded-md bg-purple-200 dark:bg-purple-800 text-purple-800 dark:text-purple-100 hover:bg-purple-300 dark:hover:bg-purple-700">
+          <button @click="backToContacts" class="px-3 py-1 rounded-md bg-[#EADDFF] dark:bg-[#4F378B] text-[#21005D] dark:text-[#EADDFF] hover:bg-[#D0BCFF] dark:hover:bg-[#381E72]">
             <span>返回联系人</span>
           </button>
         </div>
@@ -370,7 +370,7 @@ watchEffect(() => {
         </div>
         
         <div class="p-4 flex justify-end">
-          <button @click="closeStats" class="px-3 py-1 rounded-md bg-purple-200 dark:bg-purple-800 text-purple-800 dark:text-purple-100 hover:bg-purple-300 dark:hover:bg-purple-700">
+          <button @click="closeStats" class="px-3 py-1 rounded-md bg-[#EADDFF] dark:bg-[#4F378B] text-[#21005D] dark:text-[#EADDFF] hover:bg-[#D0BCFF] dark:hover:bg-[#381E72]">
             <span>关闭</span>
           </button>
         </div>
