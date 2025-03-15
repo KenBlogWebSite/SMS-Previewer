@@ -1,87 +1,63 @@
 # 📱 SMS Previewer
 
-> 一个简洁优雅的短信备份预览工具，基于 SMS Backup & Restore 应用导出的备份文件
->
-> A clean and elegant SMS backup viewer for SMS Backup & Restore exported files
+[English](README.en.md) | 简体中文
 
-## 💝 特别感谢 | Special Thanks
+> 一个简洁优雅的短信备份预览工具，基于 SMS Backup & Restore 应用导出的备份文件
+
+## 💝 特别感谢
 
 本项目的诞生离不开 [SMS Backup & Restore](https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore) 的支持。这款优秀的安卓应用启发了我创建这个项目，为用户提供更好的短信备份浏览体验。
 
-This project wouldn't be possible without [SMS Backup & Restore](https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore). This excellent Android app inspired the creation of this project, aiming to provide users with a better SMS backup browsing experience.
-
-## ✨ 功能特点 | Features
+## ✨ 功能特点
 
 - 🔍 支持预览 SMS Backup & Restore 导出的 XML 文件
-  > Preview XML files exported from SMS Backup & Restore
 - 👥 智能联系人列表，显示最新消息预览
-  > Smart contact list with latest message preview
 - 💬 美观的对话气泡界面
-  > Beautiful chat bubble interface
 - 🔔 支持未读消息计数显示
-  > Unread message counter support
 - 📱 独立滚动的联系人和消息列表
-  > Independent scrolling for contacts and messages
 - 📊 短信和通话记录统计分析功能
-  > SMS and call history statistics analysis
   - 📈 消息总量、收发比例统计
-    > Message volume and send/receive ratio statistics
   - 👤 联系人互动频率分析
-    > Contact interaction frequency analysis
   - 📅 时间跨度和日均消息量分析
-    > Time span and daily message volume analysis
 - 📞 通话记录分析功能
-  > Call history analysis features
 - 📊 通话时长统计和类型筛选
-  > Call duration statistics and type filtering
 - 🌙 支持深色模式，自动适应系统主题
-  > Dark mode support, automatically adapts to system theme
 - 📱 响应式设计，适配移动端和桌面端
-  > Responsive design for mobile and desktop
 - 🔄 优化的导航体验，轻松切换短信和通话记录
-  > Optimized navigation experience for switching between SMS and call records
 - 🌓 支持深色/浅色主题
-  > Dark/Light theme support
 - 🚀 快速且轻量，完全在浏览器端运行
-  > Fast and lightweight, runs entirely in the browser
 - 🔒 保护隐私，无需上传服务器
-  > Privacy protected, no server upload required
 
-## 技术栈 | Tech Stack
+## 技术栈
 
-- Vue 3 - 渐进式 JavaScript 框架 | Progressive JavaScript Framework
-- Vite - 下一代前端构建工具 | Next Generation Frontend Build Tool
-- Tailwind CSS - 实用优先的 CSS 框架 | Utility-First CSS Framework
+- Vue 3 - 渐进式 JavaScript 框架
+- Vite - 下一代前端构建工具
+- Tailwind CSS - 实用优先的 CSS 框架
 
-## 安装 | Installation
+## 安装
 
 ```bash
-# 安装依赖 | Install dependencies
+# 安装依赖
 pnpm install
 
-# 启动开发服务器 | Start dev server
+# 启动开发服务器
 pnpm dev
 
-# 构建生产版本 | Build for production
+# 构建生产版本
 pnpm build
 ```
 
-## 使用方法 | Usage
+## 使用方法
 
 1. 使用 SMS Backup & Restore 应用导出短信为 XML 文件
-   > Export SMS as XML file using SMS Backup & Restore app
 2. 打开 SMS Previewer 网页
-   > Open SMS Previewer website
 3. 点击上传或拖拽 XML 文件到上传区域
-   > Click to upload or drag and drop XML file to the upload area
 4. 即可查看短信记录
-   > View your SMS records
 5. 点击"统计分析"按钮查看消息统计数据
-   > Click "Statistics" button to view message statistics
 
-## To 开发者 | For Developers
+## 开发者指南
 
-### XML 文件处理机制 | XML File Processing
+### XML 文件处理机制
 
 本项目采用纯浏览器端处理方案，所有数据操作均在客户端完成，确保用户隐私安全：
 
@@ -100,7 +76,7 @@ pnpm build
    - 利用 requestIdleCallback 在浏览器空闲时执行计算密集型任务
    - 实现增量加载，优先显示最新消息
 
-### 状态管理与数据流 | State Management & Data Flow
+### 状态管理与数据流
 
 项目采用 Vue 3 的 Composition API 和响应式系统管理状态：
 
@@ -114,7 +90,7 @@ pnpm build
    - 单向数据流，确保状态变更可追踪
    - 组件通过 `props` 和事件通信
 
-### 组件通信架构 | Component Communication
+### 组件通信架构
 
 采用多种组件通信方式，确保数据流转清晰：
 
@@ -130,7 +106,7 @@ pnpm build
    - 使用 `provide/inject` 共享全局状态
    - 复杂场景采用事件总线机制
 
-### 路由系统设计 | Router System
+### 路由系统设计
 
 基于 Vue Router 实现 SPA 路由管理：
 
@@ -144,7 +120,7 @@ pnpm build
    - 组件复用：共享布局和导航组件
    - 路由参数传递：支持查询参数和动态路由
 
-### 错误处理机制 | Error Handling
+### 错误处理机制
 
 采用多层次的错误处理策略：
 
@@ -163,7 +139,7 @@ pnpm build
    - 错误详情展示
    - 操作引导提示
 
-### 代码结构说明 | Code Structure
+### 代码结构说明
 
 项目采用模块化组织，职责划分明确：
 
@@ -197,7 +173,7 @@ pnpm build
   - 提供状态管理能力
   - 实现功能模块复用
 
-### 性能优化策略 | Performance Optimization
+### 性能优化策略
 
 为确保应用在处理大型 XML 文件时保持流畅，采用以下优化策略：
 
@@ -216,7 +192,7 @@ pnpm build
    - 计算属性缓存：避免重复计算
    - 事件委托：减少事件监听器数量
 
-## 开源协议 | License
+## 开源协议
 
 本项目采用 [知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议（CC BY-NC-SA 4.0）](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 进行许可。
 
