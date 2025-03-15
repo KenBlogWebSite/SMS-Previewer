@@ -1,39 +1,20 @@
 import { ref, watch, computed } from 'vue';
 import { usePreferredDark } from '@vueuse/core';
 
-// 定义主题类型
+// 定义主题类型（暂时只保留 Material You 主题）
 const themes = {
-  auto: '自动',
-  harmony: '鸿蒙',
-  material: 'Material You',
-  ios: 'iOS'
+  material: 'Material You'
 };
 
-// 主题配置
+// Material You 主题配置
 const themeConfig = {
-  harmony: {
-    borderRadius: '16px',
-    colors: {
-      primary: '#007DFF',
-      secondary: '#36D1DC',
-      background: '#F1F3F5',
-      surface: '#FFFFFF',
-      text: '#000000',
-      dark: {
-        primary: '#007DFF',
-        secondary: '#36D1DC',
-        background: '#1A1A1A',
-        surface: '#2C2C2C',
-        text: '#FFFFFF'
-      }
-    }
-  },
   material: {
     borderRadius: '16px',
     colors: {
       primary: '#6750A4',
       secondary: '#625B71',
       tertiary: '#7D5260',
+      error: '#B3261E',
       background: '#FFFBFE',
       surface: '#FFFFFF',
       surfaceVariant: '#E7E0EC',
@@ -52,6 +33,7 @@ const themeConfig = {
       onTertiary: '#FFFFFF',
       onSurface: '#1C1B1F',
       onSurfaceVariant: '#49454F',
+      onError: '#FFFFFF',
       stateLayerOpacity: {
         hover: '0.08',
         focus: '0.12',
@@ -59,14 +41,18 @@ const themeConfig = {
         dragged: '0.16'
       },
       elevation: {
-        level1: '0px 1px 2px rgba(0,0,0,0.3)',
-        level2: '0px 2px 4px rgba(0,0,0,0.3)',
-        level3: '0px 4px 8px rgba(0,0,0,0.3)'
+        level0: '0px 0px 0px rgba(0,0,0,0)',
+        level1: '0px 1px 2px rgba(0,0,0,0.3), 0px 1px 3px 1px rgba(0,0,0,0.15)',
+        level2: '0px 1px 2px rgba(0,0,0,0.3), 0px 2px 6px 2px rgba(0,0,0,0.15)',
+        level3: '0px 1px 3px rgba(0,0,0,0.3), 0px 4px 8px 3px rgba(0,0,0,0.15)',
+        level4: '0px 2px 3px rgba(0,0,0,0.3), 0px 6px 10px 4px rgba(0,0,0,0.15)',
+        level5: '0px 4px 4px rgba(0,0,0,0.3), 0px 8px 12px 6px rgba(0,0,0,0.15)'
       },
       dark: {
         primary: '#D0BCFF',
         secondary: '#CCC2DC',
         tertiary: '#EFB8C8',
+        error: '#F2B8B5',
         background: '#1C1B1F',
         surface: '#141218',
         surfaceVariant: '#49454F',
@@ -85,6 +71,7 @@ const themeConfig = {
         onTertiary: '#492532',
         onSurface: '#E6E1E5',
         onSurfaceVariant: '#CAC4D0',
+        onError: '#601410',
         stateLayerOpacity: {
           hover: '0.08',
           focus: '0.12',
@@ -92,70 +79,46 @@ const themeConfig = {
           dragged: '0.16'
         },
         elevation: {
-          level1: '0px 1px 3px rgba(0,0,0,0.5)',
-          level2: '0px 2px 6px rgba(0,0,0,0.5)',
-          level3: '0px 4px 12px rgba(0,0,0,0.5)'
+          level0: '0px 0px 0px rgba(0,0,0,0)',
+          level1: '0px 1px 3px 1px rgba(0,0,0,0.25), 0px 1px 2px rgba(0,0,0,0.5)',
+          level2: '0px 2px 6px 2px rgba(0,0,0,0.25), 0px 1px 2px rgba(0,0,0,0.5)',
+          level3: '0px 4px 8px 3px rgba(0,0,0,0.25), 0px 1px 3px rgba(0,0,0,0.5)',
+          level4: '0px 6px 10px 4px rgba(0,0,0,0.25), 0px 2px 3px rgba(0,0,0,0.5)',
+          level5: '0px 8px 12px 6px rgba(0,0,0,0.25), 0px 4px 4px rgba(0,0,0,0.5)'
         }
-      }
-    }
-  },
-  ios: {
-    borderRadius: '12px',
-    colors: {
-      primary: '#007AFF',
-      secondary: '#5856D6',
-      background: '#F2F2F7',
-      surface: '#FFFFFF',
-      text: '#000000',
-      dark: {
-        primary: '#0A84FF',
-        secondary: '#5E5CE6',
-        background: '#000000',
-        surface: '#1C1C1E',
-        text: '#FFFFFF'
       }
     }
   }
 };
 
 export function useTheme() {
-  const currentTheme = ref('auto');
+  // 固定使用 Material You 主题
+  const currentTheme = ref('material');
   const isDark = usePreferredDark();
-  const systemTheme = ref(isDark.value ? 'material' : 'harmony');
-
-  // 获取当前实际使用的主题
-  const activeTheme = computed(() => {
-    return currentTheme.value === 'auto' ? systemTheme.value : currentTheme.value;
-  });
 
   // 获取当前主题配置
   const currentThemeConfig = computed(() => {
-    const config = themeConfig[activeTheme.value];
+    const config = themeConfig.material;
     return isDark.value ? {
       ...config,
       colors: {
+        ...config.colors,
         ...config.colors.dark
       }
     } : config;
   });
 
-  // 监听系统主题变化
-  watch(isDark, (newValue) => {
-    systemTheme.value = newValue ? 'material' : 'harmony';
-  });
-
-  // 切换主题
+  // 预留主题切换接口（当前不可用）
   function setTheme(theme) {
-    if (themes[theme]) {
-      currentTheme.value = theme;
-    }
+    console.log('主题切换功能暂时关闭，固定使用 Material You 主题');
+    // 预留接口，不执行实际操作
   }
 
   return {
     themes,
     currentTheme,
-    activeTheme,
     currentThemeConfig,
+    isDark,
     setTheme
   };
 }

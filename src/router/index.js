@@ -8,6 +8,9 @@ const routes = [
   },
   {
     path: '/local',
+    component: { 
+      template: '<router-view></router-view>' 
+    },
     children: [
       {
         path: 'sms',
@@ -27,6 +30,9 @@ const routes = [
   },
   {
     path: '/server',
+    component: { 
+      template: '<router-view></router-view>' 
+    },
     children: [
       {
         path: 'sms',

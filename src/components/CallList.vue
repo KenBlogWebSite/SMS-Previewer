@@ -96,16 +96,16 @@ const callStats = computed(() => {
     <!-- 按日期分组显示通话记录 -->
     <div v-for="[date, calls] in groupedCalls" :key="date" class="space-y-3">
       <!-- 日期分隔线 -->
-      <md-divider>
+      <mdui-divider>
         <span class="text-sm" style="color: var(--mdui-color-on-surface-variant);">{{ date }}</span>
-      </md-divider>
+      </mdui-divider>
 
       <!-- 当天的通话记录列表 -->
       <div class="space-y-3">
         <div 
           v-for="call in calls" 
           :key="call.date.getTime()" 
-          class="w-full p-4 rounded-lg"
+          class="w-full p-4 rounded-lg transition-shadow duration-300 call-item"
           :style="{
             backgroundColor: 'var(--mdui-color-surface-container)',
             boxShadow: 'var(--mdui-elevation-level1)'
@@ -130,10 +130,10 @@ const callStats = computed(() => {
                 </span>
               </div>
               <div>
-                <h3 class="text-lg font-medium md-title" style="color: var(--mdui-color-on-surface);">
+                <h3 class="text-lg font-medium" style="color: var(--mdui-color-on-surface);">
                   {{ call.contactName === '(Unknown)' ? call.number : call.contactName }}
                 </h3>
-                <p class="text-sm md-body-small" style="color: var(--mdui-color-on-surface-variant);">
+                <p class="text-sm" style="color: var(--mdui-color-on-surface-variant);">
                   {{ formatDateTime(call.date) }}
                 </p>
               </div>
@@ -161,7 +161,10 @@ const callStats = computed(() => {
     </div>
 
     <!-- 通话类型统计图表 -->
-    <div v-if="props.calls.length > 0" class="mb-6">
+    <div v-if="props.calls.length > 0" class="mb-6 p-4 rounded-lg" :style="{
+      backgroundColor: 'var(--mdui-color-surface-container)',
+      boxShadow: 'var(--mdui-elevation-level1)'
+    }">
       <mdui-chart
         type="pie"
         :data="{
@@ -193,10 +196,20 @@ const callStats = computed(() => {
 
     <!-- 无数据提示 -->
     <div v-if="props.calls.length === 0" class="flex flex-col items-center justify-center py-12" style="background-color: var(--mdui-color-surface-container-low); border-radius: var(--mdui-shape-corner-large);">
-      <md-icon style="font-size: 48px; color: var(--mdui-color-outline);" class="material-icons">phone_missed</md-icon>
+      <mdui-icon style="font-size: 48px; color: var(--mdui-color-outline);">phone_missed</mdui-icon>
       <p class="mt-4 text-center" style="color: var(--mdui-color-on-surface-variant);">
         暂无通话记录，请上传通话记录文件
       </p>
     </div>
   </div>
 </template>
+
+<style scoped>
+.call-item {
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.call-item:hover {
+  box-shadow: var(--mdui-elevation-level2);
+}
+</style>

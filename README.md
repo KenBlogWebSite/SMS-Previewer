@@ -22,12 +22,24 @@ This project wouldn't be possible without [SMS Backup & Restore](https://play.go
   > Unread message counter support
 - 📱 独立滚动的联系人和消息列表
   > Independent scrolling for contacts and messages
+- 📊 短信和通话记录统计分析功能
+  > SMS and call history statistics analysis
+  - 📈 消息总量、收发比例统计
+    > Message volume and send/receive ratio statistics
+  - 👤 联系人互动频率分析
+    > Contact interaction frequency analysis
+  - 📅 时间跨度和日均消息量分析
+    > Time span and daily message volume analysis
 - 📞 通话记录分析功能
   > Call history analysis features
 - 📊 通话时长统计和类型筛选
   > Call duration statistics and type filtering
-- 📅 通话时间线展示
-  > Call timeline display
+- 🌙 支持深色模式，自动适应系统主题
+  > Dark mode support, automatically adapts to system theme
+- 📱 响应式设计，适配移动端和桌面端
+  > Responsive design for mobile and desktop
+- 🔄 优化的导航体验，轻松切换短信和通话记录
+  > Optimized navigation experience for switching between SMS and call records
 - 🌓 支持深色/浅色主题
   > Dark/Light theme support
 - 🚀 快速且轻量，完全在浏览器端运行
@@ -35,13 +47,13 @@ This project wouldn't be possible without [SMS Backup & Restore](https://play.go
 - 🔒 保护隐私，无需上传服务器
   > Privacy protected, no server upload required
 
-## 🛠️ 技术栈 | Tech Stack
+## 技术栈 | Tech Stack
 
 - Vue 3 - 渐进式 JavaScript 框架 | Progressive JavaScript Framework
 - Vite - 下一代前端构建工具 | Next Generation Frontend Build Tool
 - Tailwind CSS - 实用优先的 CSS 框架 | Utility-First CSS Framework
 
-## 📦 安装 | Installation
+## 安装 | Installation
 
 ```bash
 # 安装依赖 | Install dependencies
@@ -54,7 +66,7 @@ pnpm dev
 pnpm build
 ```
 
-## 🚀 使用方法 | Usage
+## 使用方法 | Usage
 
 1. 使用 SMS Backup & Restore 应用导出短信为 XML 文件
    > Export SMS as XML file using SMS Backup & Restore app
@@ -64,8 +76,10 @@ pnpm build
    > Click to upload or drag and drop XML file to the upload area
 4. 即可查看短信记录
    > View your SMS records
+5. 点击"统计分析"按钮查看消息统计数据
+   > Click "Statistics" button to view message statistics
 
-## 👨‍💻 To 开发者 | For Developers
+## To 开发者 | For Developers
 
 ### XML 文件处理机制 | XML File Processing
 
@@ -80,6 +94,11 @@ pnpm build
    - 所有数据临时存储在内存中（Vue 的响应式状态）
    - 浏览器关闭或刷新页面后数据自动清除
    - 不使用本地存储（LocalStorage/IndexedDB），确保隐私安全
+4. 性能优化：
+   - 批量处理机制，避免大文件解析时阻塞 UI
+   - 使用 Web Worker 进行异步解析
+   - 利用 requestIdleCallback 在浏览器空闲时执行计算密集型任务
+   - 实现增量加载，优先显示最新消息
 
 ### 状态管理与数据流 | State Management & Data Flow
 
@@ -139,6 +158,11 @@ pnpm build
    - 组件级错误处理
    - 降级展示机制
 
+3. 用户反馈：
+   - Toast 通知系统
+   - 错误详情展示
+   - 操作引导提示
+
 ### 代码结构说明 | Code Structure
 
 项目采用模块化组织，职责划分明确：
@@ -148,9 +172,11 @@ pnpm build
     - `parseXMLFile()`: 主要解析函数
     - `formatMessageType()`: 消息类型格式化
     - `formatDateTime()`: 日期时间格式化
+    - `analyzeMessageStats()`: 短信统计分析
   - `callParser.js`: 通话记录解析模块
     - `parseCallHistory()`: 通话记录解析
     - `calculateDuration()`: 通话时长计算
+    - `analyzeCallStats()`: 通话记录统计分析
 
 - `src/components/`: Vue 组件
   - `SearchBar.vue`: 搜索组件（支持实时搜索和防抖）
@@ -164,11 +190,33 @@ pnpm build
   - `CallsView.vue`: 通话记录视图
 
 - `src/composables/`: 可复用的组合式函数
+  - `useTheme.js`: 主题管理
+  - `useDevice.js`: 设备类型检测
+  - `useToast.js`: Toast 通知系统
   - 封装常用的业务逻辑
   - 提供状态管理能力
   - 实现功能模块复用
 
-## 📝 开源协议 | License
+### 性能优化策略 | Performance Optimization
+
+为确保应用在处理大型 XML 文件时保持流畅，采用以下优化策略：
+
+1. 数据处理优化：
+   - 批量处理：将大型数据集分批次处理，每批 500 条记录
+   - 增量渲染：优先处理并显示最新的消息记录
+   - 虚拟滚动：长列表采用虚拟滚动技术，减少 DOM 节点数量
+
+2. 异步处理机制：
+   - Web Worker：将耗时计算任务放入独立线程
+   - requestIdleCallback：利用浏览器空闲时间执行非关键任务
+   - 异步组件加载：按需加载非核心组件
+
+3. 渲染性能：
+   - 组件懒加载：路由级别的组件懒加载
+   - 计算属性缓存：避免重复计算
+   - 事件委托：减少事件监听器数量
+
+## 开源协议 | License
 
 本项目采用 [知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议（CC BY-NC-SA 4.0）](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 进行许可。
 

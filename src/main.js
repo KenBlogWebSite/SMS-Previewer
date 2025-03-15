@@ -27,7 +27,7 @@ import '@material/web/switch/switch.js'
 import { styles as typescaleStyles } from '@material/web/typography/md-typescale-styles.js'
 
 // 导入MDUI组件
-import 'mdui'
+import * as mdui from 'mdui'
 import 'mdui/mdui.css'
 
 // 导入MDUI主题配置
@@ -40,5 +40,8 @@ document.adoptedStyleSheets.push(typescaleStyles.styleSheet)
 useMDUITheme()
 
 const app = createApp(App)
+
+// 不再在这里设置自定义元素，而是在vite.config.js中设置
+
 app.use(router)
 app.mount('#app')

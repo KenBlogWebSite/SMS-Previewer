@@ -1,12 +1,16 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { RouterView, RouterLink, useRoute } from 'vue-router'
+import { RouterView, useRoute } from 'vue-router'
 import ThemeSwitch from './components/ThemeSwitch.vue'
 import { useTheme } from './composables/useTheme'
 
-// 错误提示状态
+// 提示消息状态
 const errorMessage = ref('')
 const showError = ref(false)
+const successMessage = ref('')
+const showSuccess = ref(false)
+const infoMessage = ref('')
+const showInfo = ref(false)
 
 // 主题配置
 const { currentThemeConfig } = useTheme()
@@ -24,6 +28,26 @@ window.addEventListener('show-error', (event) => {
     errorMessage.value = ''
   }, 3000)
 })
+
+// 监听成功事件
+window.addEventListener('show-success', (event) => {
+  successMessage.value = event.detail.message
+  showSuccess.value = true
+  setTimeout(() => {
+    showSuccess.value = false
+    successMessage.value = ''
+  }, 3000)
+})
+
+// 监听信息提示事件
+window.addEventListener('show-info', (event) => {
+  infoMessage.value = event.detail.message
+  showInfo.value = true
+  setTimeout(() => {
+    showInfo.value = false
+    infoMessage.value = ''
+  }, 3000)
+})
 </script>
 
 <template>
@@ -32,31 +56,27 @@ window.addEventListener('show-error', (event) => {
     color: currentThemeConfig.colors.text
   }">
     <!-- 顶部导航栏 - 只在非欢迎页面显示 -->
-    <md-top-app-bar v-if="showNavbar" class="sticky top-0 z-40">
-      <h1 class="text-lg sm:text-xl md:text-2xl font-bold">SMS Previewer</h1>
-      <template #end>
-        <md-segmented-button-set>
-          <md-segmented-button 
-            :selected="$route.path === '/sms'"
-            @click="$router.push('/sms')"
+    <div v-if="showNavbar" class="sticky top-0 z-40 bg-white dark:bg-gray-800 shadow">
+      <div class="container mx-auto px-4 py-2 flex items-center justify-between">
+        <h1 class="text-lg sm:text-xl md:text-2xl font-bold">SMS Previewer</h1>
+        <div class="flex gap-2">
+          <button 
+            class="px-3 py-1 rounded-md hover:bg-purple-100 dark:hover:bg-purple-900"
+            :class="{ 'bg-purple-200 dark:bg-purple-800 text-purple-800 dark:text-purple-100': $route.path.includes('/sms'), 'text-purple-600 dark:text-purple-300': !$route.path.includes('/sms') }"
+            @click="$router.push('/local/sms')"
           >
-            <template #icon>
-              <md-icon>sms</md-icon>
-            </template>
-            <span>短信记录</span>
-          </md-segmented-button>
-          <md-segmented-button 
-            :selected="$route.path === '/calls'"
-            @click="$router.push('/calls')"
+            短信记录
+          </button>
+          <button 
+            class="px-3 py-1 rounded-md hover:bg-purple-100 dark:hover:bg-purple-900"
+            :class="{ 'bg-purple-200 dark:bg-purple-800 text-purple-800 dark:text-purple-100': $route.path.includes('/calls'), 'text-purple-600 dark:text-purple-300': !$route.path.includes('/calls') }"
+            @click="$router.push('/local/calls')"
           >
-            <template #icon>
-              <md-icon>call</md-icon>
-            </template>
-            <span>通话记录</span>
-          </md-segmented-button>
-        </md-segmented-button-set>
-      </template>
-    </md-top-app-bar>
+            通话记录
+          </button>
+        </div>
+      </div>
+    </div>
 
     <!-- 主要内容区域 -->
     <div class="container mx-auto px-4 py-6 md:px-6 lg:px-8">
@@ -66,32 +86,44 @@ window.addEventListener('show-error', (event) => {
     <!-- 主题切换组件 -->
     <ThemeSwitch />
 
-    <!-- 错误提示 Snackbar -->
-    <Transition
-      enter-active-class="transition ease-out duration-300"
-      enter-from-class="transform translate-y-2 opacity-0"
-      enter-to-class="transform translate-y-0 opacity-100"
-      leave-active-class="transition ease-in duration-200"
-      leave-from-class="transform translate-y-0 opacity-100"
-      leave-to-class="transform translate-y-2 opacity-0"
-    >
-      <md-snackbar
-        v-if="showError"
-        :open="showError"
-        action="关闭"
-        @close="showError = false"
-        class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50"
-        :style="{
-          backgroundColor: currentThemeConfig.colors.surfaceContainer,
-          color: currentThemeConfig.colors.onSurface,
-          boxShadow: 'var(--mdui-elevation-level3)'
-        }"
-      >
-        <div class="flex items-center gap-2">
-          <md-icon class="text-error">error</md-icon>
-          <span>{{ errorMessage }}</span>
-        </div>
-      </md-snackbar>
-    </Transition>
+    <!-- 错误提示 -->
+    <div v-if="showError" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full bg-red-100 text-red-800 p-3 rounded-lg shadow-lg flex items-center gap-2">
+      <span class="font-bold">错误：</span>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+    <!-- 成功提示 -->
+    <div v-if="showSuccess" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full bg-green-100 text-green-800 p-3 rounded-lg shadow-lg flex items-center gap-2">
+      <span class="font-bold">成功：</span>
+      <span>{{ successMessage }}</span>
+    </div>
+
+    <!-- 信息提示 -->
+    <div v-if="showInfo" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full bg-blue-100 text-blue-800 p-3 rounded-lg shadow-lg flex items-center gap-2">
+      <span class="font-bold">提示：</span>
+      <span>{{ infoMessage }}</span>
+    </div>
   </div>
 </template>
+
+<style>
+/* 全局样式优化 */
+:root {
+  --toast-z-index: 9999;
+}
+
+/* 性能优化 */
+* {
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 移动设备优化 */
+@media (max-width: 640px) {
+  .fixed.bottom-4.left-1\/2 {
+    width: 90% !important;
+    max-width: 90% !important;
+  }
+}
+</style>
